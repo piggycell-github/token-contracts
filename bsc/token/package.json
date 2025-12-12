@@ -1,0 +1,36 @@
+{
+  "name": "piggy-token-bsc",
+  "version": "1.0.0",
+  "description": "PiggycellToken system for BSC chain",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js --network bsc_testnet",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network bsc_mainnet",
+    "verify": "npx hardhat verify --network bsc_testnet",
+    "test": "npx hardhat test",
+    "test:mint": "npx hardhat test test/MintingScript.test.js",
+    "test:all": "npx hardhat test test/PiggycellToken.test.js",
+    "mint:real:testnet": "npx hardhat run scripts/mint-to-address.js --network bsc_testnet",
+    "mint:real:mainnet": "npx hardhat run scripts/mint-to-address.js --network bsc_mainnet",
+    "node": "npx hardhat node"
+  },
+  "keywords": [
+    "blockchain",
+    "bsc",
+    "erc20",
+    "points",
+    "piggy"
+  ],
+  "author": "PiggyCell",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "hardhat": "^2.22.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.5"
+  },
+  "type": "module"
+}
