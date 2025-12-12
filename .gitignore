@@ -12,8 +12,8 @@ yarn.lock
 .env.production
 
 # Hardhat files
-# cache/
-# artifacts/
+cache/
+artifacts/
 typechain-types/
 coverage/
 coverage.json
