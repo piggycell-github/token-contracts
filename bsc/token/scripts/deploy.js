@@ -3,29 +3,27 @@ import hre from "hardhat";
 async function main() {
   await hre.run("compile");
 
+  // Check if PRIVATE_KEY is set in environment
+  if (!process.env.PRIVATE_KEY) {
+    throw new Error("PRIVATE_KEY environment variable is required for deployment");
+  }
+
   const [deployer] = await hre.ethers.getSigners();
   console.log("Deployer:", deployer.address);
 
   const balance = await hre.ethers.provider.getBalance(deployer.address);
   console.log("Balance:", hre.ethers.formatEther(balance), "BNB");
 
-  const multisigWallet = process.env.MULTISIG_WALLET || process.env.OWNER_WALLET;
-
-  if (!multisigWallet) {
-    throw new Error("MULTISIG_WALLET or OWNER_WALLET environment variable is required");
+  // Check if deployer has sufficient BNB
+  if (balance === 0n) {
+    throw new Error("Deployer wallet has no BNB. Please fund the wallet before deployment.");
   }
 
-  if (!hre.ethers.isAddress(multisigWallet)) {
-    throw new Error("Multisig wallet address is not a valid Ethereum address");
+  const ownerWallet = process.env.OWNER_WALLET;
+  
+  if (!ownerWallet) {
+    throw new Error("OWNER_WALLET environment variable is required");
   }
-
-  const code = await hre.ethers.provider.getCode(multisigWallet);
-  if (code === "0x") {
-    throw new Error("Multisig wallet must be a contract address (EOA not allowed)");
-  }
-
-  console.log("Multisig Wallet (token recipient & contract owner):", multisigWallet);
-  console.log("Max Supply: 100,000,000 PIGGY (will be minted to multisig wallet)");
 
   console.log("\n=== Step 1: Deploying Implementation Contract ===");
   const PiggycellFactory = await hre.ethers.getContractFactory("Piggycell");
@@ -36,14 +34,14 @@ async function main() {
   console.log("Implementation deployed at:", implementationAddress);
 
   console.log("\n=== Step 2: Deploying Proxy Contract ===");
-  const ERC1967Proxy = await hre.ethers.getContractFactory("ERC1967Proxy");
+  const ERC1967ProxyFactory = await hre.ethers.getContractFactory("contracts/ERC1967Proxy.sol:ERC1967Proxy");
   
   const initializeData = PiggycellFactory.interface.encodeFunctionData(
     "initialize",
-    [multisigWallet]
+    [ownerWallet]
   );
 
-  const proxy = await ERC1967Proxy.deploy(implementationAddress, initializeData);
+  const proxy = await ERC1967ProxyFactory.deploy(implementationAddress, initializeData);
   await proxy.waitForDeployment();
   const proxyAddress = await proxy.getAddress();
   console.log("Proxy deployed at:", proxyAddress);
@@ -64,8 +62,8 @@ async function main() {
     "PIGGY"
   );
   console.log(
-    "Multisig Wallet Balance:",
-    hre.ethers.formatEther(await Piggycell.balanceOf(multisigWallet)),
+    "Owner Wallet Balance:",
+    hre.ethers.formatEther(await Piggycell.balanceOf(ownerWallet)),
     "PIGGY"
   );
 
@@ -81,7 +79,7 @@ async function main() {
     proxyAddress,
     implementationAddress,
     deployer: deployer.address,
-    multisigWallet,
+    ownerWallet,
     network: hre.network.name,
   };
 }

@@ -19,13 +19,11 @@ contract Piggycell is
     
     function initialize(address _owner) public initializer {
         require(_owner != address(0), "Owner cannot be zero address");
-        require(_isContract(_owner), "Owner must be contract (Safe/Timelock)");
         
         __ERC20_init("Piggycell", "PIGGY");
-        __Ownable_init();
+        __Ownable_init(_owner);
         __UUPSUpgradeable_init();
         
-        _transferOwnership(_owner);
         _mint(_owner, MAX_SUPPLY);
     }
     
@@ -36,14 +34,6 @@ contract Piggycell is
     {
         require(newImplementation != address(0), "New implementation cannot be zero address");
         require(newImplementation.code.length > 0, "New implementation must be a contract");
-    }
-
-    function _isContract(address account) internal view returns (bool) {
-        uint256 size;
-        assembly {
-            size := extcodesize(account)
-        }
-        return size > 0;
     }
 
     function transferOwnership(address newOwner) public override onlyOwner {
