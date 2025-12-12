@@ -1,5 +1,76 @@
-node_modules
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Environment variables
 .env
-.dfx
-.wallet
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Hardhat files
+cache/
+artifacts/
+typechain-types/
+coverage/
+coverage.json
+
+# Hardhat Ignition
+ignition/deployments/chain-*
+
+# Hardhat cache
+.hardhat/
+
+# Solidity
+*.sol.bak
+*.sol~
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Wallet files
+.wallet
+*.wallet
+
+# DFX (if using Internet Computer)
+.dfx/
+
+# Build outputs
+dist/
+build/
+out/

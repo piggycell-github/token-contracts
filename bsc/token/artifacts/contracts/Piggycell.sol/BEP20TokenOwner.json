@@ -74,20 +74,20 @@
       "inputs": [],
       "name": "renounceOwnership",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "pure",
       "type": "function"
     },
     {
       "inputs": [
         {
           "internalType": "address",
-          "name": "newOwner",
+          "name": "",
           "type": "address"
         }
       ],
       "name": "transferOwnership",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "pure",
       "type": "function"
     }
   ],
