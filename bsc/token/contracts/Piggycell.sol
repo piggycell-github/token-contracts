@@ -37,6 +37,8 @@ contract Piggycell is
     }
 
     function transferOwnership(address newOwner) public override onlyOwner {
-        revert("Transfer ownership disabled");
+        require(newOwner != address(0), "New owner cannot be zero address");
+        require(newOwner.code.length > 0, "New owner must be a contract");
+        super.transferOwnership(newOwner);
     }
 } 
