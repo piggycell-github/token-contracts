@@ -1,0 +1,33 @@
+{
+  "name": "piggy-staking-bsc",
+  "version": "1.0.0",
+  "description": "Piggycell staking contract for BSC chain",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "deploy:testnet": "npx hardhat run scripts/deploy.js --network bsc_testnet",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network bsc_mainnet",
+    "verify": "npx hardhat verify --network bsc_testnet",
+    "test": "npx hardhat test",
+    "node": "npx hardhat node"
+  },
+  "keywords": [
+    "blockchain",
+    "bsc",
+    "staking",
+    "piggy"
+  ],
+  "author": "PiggyCell",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.1.2",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "hardhat": "^2.27.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0",
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
+    "dotenv": "^16.6.1"
+  },
+  "type": "module"
+}
