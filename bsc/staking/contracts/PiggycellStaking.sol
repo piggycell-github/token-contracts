@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
  * @notice PIGGY token staking contract with time-based APR and NFT Boost
  * @dev
  * Core Features:
- * 1. Time-based APR: APR automatically increases based on staking duration (3% -> 12%)
+ * 1. Time-based APR: APR automatically increases based on staking duration (0% -> 18%)
  * 2. Single Position: One staking position per user
  * 3. Weighted Average Duration: Additional stakes recalculate duration using weighted average
  * 4. Partial Unstaking: Partial withdrawals allowed, remaining stake keeps accruing time
@@ -180,16 +180,16 @@ contract PiggycellStaking is
      * @dev Initialize default APR tiers
      */
     function _initializeDefaultAPRTiers() internal {
-        // 0-29 days: 3%
-        aprTiers.push(APRTier({minDays: 0, maxDays: 29, aprBps: 300}));
+        // 0-29 days: 0%
+        aprTiers.push(APRTier({minDays: 0, maxDays: 29, aprBps: 0}));
         // 30-89 days: 5%
         aprTiers.push(APRTier({minDays: 30, maxDays: 89, aprBps: 500}));
-        // 90-179 days: 7%
-        aprTiers.push(APRTier({minDays: 90, maxDays: 179, aprBps: 700}));
-        // 180-364 days: 9%
-        aprTiers.push(APRTier({minDays: 180, maxDays: 364, aprBps: 900}));
-        // 365+ days: 12%
-        aprTiers.push(APRTier({minDays: 365, maxDays: type(uint256).max, aprBps: 1200}));
+        // 90-179 days: 8%
+        aprTiers.push(APRTier({minDays: 90, maxDays: 179, aprBps: 800}));
+        // 180-364 days: 12%
+        aprTiers.push(APRTier({minDays: 180, maxDays: 364, aprBps: 1200}));
+        // 365+ days: 18%
+        aprTiers.push(APRTier({minDays: 365, maxDays: type(uint256).max, aprBps: 1800}));
     }
 
     /**
@@ -198,14 +198,16 @@ contract PiggycellStaking is
     function _initializeDefaultNFTBoostTiers() internal {
         // 0-999: 0%
         nftBoostTiers.push(NFTBoostTier({minAmount: 0, boostBps: 0}));
-        // 1,000-4,999: 5%
-        nftBoostTiers.push(NFTBoostTier({minAmount: 1000 * 1e18, boostBps: 500}));
-        // 5,000-9,999: 15%
+        // 1,000-4,999: +10%
+        nftBoostTiers.push(NFTBoostTier({minAmount: 1000 * 1e18, boostBps: 1000}));
+        // 5,000-9,999: +15%
         nftBoostTiers.push(NFTBoostTier({minAmount: 5000 * 1e18, boostBps: 1500}));
-        // 10,000-49,999: 25%
-        nftBoostTiers.push(NFTBoostTier({minAmount: 10000 * 1e18, boostBps: 2500}));
-        // 50,000+: 40%
-        nftBoostTiers.push(NFTBoostTier({minAmount: 50000 * 1e18, boostBps: 4000}));
+        // 10,000-49,999: +20%
+        nftBoostTiers.push(NFTBoostTier({minAmount: 10000 * 1e18, boostBps: 2000}));
+        // 50,000-99,999: +30%
+        nftBoostTiers.push(NFTBoostTier({minAmount: 50000 * 1e18, boostBps: 3000}));
+        // 100,000+: +40%
+        nftBoostTiers.push(NFTBoostTier({minAmount: 100000 * 1e18, boostBps: 4000}));
     }
 
     // ============ External Functions ============
