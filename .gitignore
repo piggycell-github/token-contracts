@@ -35,6 +35,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Local operational data
+01-28-lp.txt
+bsc/token/scripts/recipients.csv
+bsc/token/scripts/bulk-transfer-log.json
+bsc/token/scripts/check-balances.js
+bsc/token/scripts/monitor-lp.js
+bsc/token/scripts/sign-message.js
+
 # OS files
 .DS_Store
 .DS_Store?

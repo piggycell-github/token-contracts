@@ -2,10 +2,7 @@ import functions from "@google-cloud/functions-framework";
 import { ethers } from "ethers";
 
 // 토큰 주소 (BSC Mainnet)
-const TOKEN_ADDRESS = "0x...";
-
-// Max Supply (고정값 - 1억 PIGGY)
-const MAX_SUPPLY = "100000000";
+const TOKEN_ADDRESS = "0x46345336E7C5C89bd15D557203040f2c1aB4dd18";
 
 // ERC20 ABI
 const ERC20_ABI = [
@@ -27,7 +24,15 @@ const BSC_RPC_URL = "https://bsc-dataseed1.binance.org";
 // Locked Token Vault 주소들
 // Vault 컨트랙트의 토큰 잔액 = 실제로 locked된 수량
 const VAULT_ADDRESSES = [
-    '0x...'
+    '0x879184c639a190f8dE8C462b25b03d598112b7a6',
+    '0xdB85Ff0DBCE5e0dF33Dc2354bB2c05e1fF798E9f',
+    '0x8bF15576C6104f380Ae32D5C897e6996C90Edf80',
+    '0x5F55C793c40b9835871e0EB6D897353160E73Af1',
+    '0x0540bef38E9F9e6aEFeEd382Fb97987a3a4eBDdF',
+    '0xB90A06c1Fa7E143F2017087a8c0627c10EF9CaB1',
+    '0xF81B907aCA4Ba383b9babE5f6d050A412bBf7a83',
+    '0xd4789C1FFe1c8F446dcE94977C756DB8ae7baf88',
+    '0xDaedceED4dd3f3a9E26731A798Ff33C49fCCc4eC',
 ];
 
 // 순환 공급에서 제외할 기타 주소 (Vault가 아닌 주소)
@@ -38,9 +43,8 @@ const OTHER_LOCKED_ADDRESSES = [
 /**
  * 토큰 공급량 조회 API
  * 경로에 따라 다른 데이터 반환:
- * - /maxSupply: Max Supply (고정값)
- * - /totalSupply: Total Supply
  * - / 또는 /circulatingSupply: Circulating Supply
+ * - /totalSupply: Total Supply
  */
 functions.http("supply", async (req, res) => {
     try {
@@ -57,28 +61,7 @@ functions.http("supply", async (req, res) => {
 
         // 경로 확인
         const path = req.path || "/";
-        const format = req.query.format || "plain";
-
-        // maxSupply 경로인 경우 (블록체인 조회 불필요)
-        if (path.includes("maxSupply") || path.includes("max")) {
-            if (format === "plain") {
-                res.set("Content-Type", "text/plain");
-                res.send(MAX_SUPPLY);
-            } else {
-                res.set("Content-Type", "application/json");
-                res.json({
-                    success: true,
-                    data: {
-                        maxSupply: MAX_SUPPLY,
-                        decimals: 18,
-                        tokenAddress: TOKEN_ADDRESS,
-                        network: "BSC",
-                    },
-                    timestamp: new Date().toISOString(),
-                });
-            }
-            return;
-        }
+        const isTotalSupply = path.includes("totalSupply");
 
         // BSC 네트워크에 연결
         const provider = new ethers.JsonRpcProvider(BSC_RPC_URL);
@@ -94,8 +77,11 @@ functions.http("supply", async (req, res) => {
         let totalSupply = await tokenContract.totalSupply();
         const decimals = await tokenContract.decimals();
 
+        // 응답 형식 결정 (쿼리 파라미터로 제어)
+        const format = req.query.format || "plain";
+
         // totalSupply 경로인 경우
-        if (path.includes("totalSupply") || path.includes("total")) {
+        if (isTotalSupply) {
             const totalSupplyFormatted = ethers.formatUnits(totalSupply, decimals);
 
             if (format === "plain") {

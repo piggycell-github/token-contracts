@@ -20,6 +20,7 @@
   "author": "PiggyCell",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^4.5.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.1.2",
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "hardhat": "^2.27.2"

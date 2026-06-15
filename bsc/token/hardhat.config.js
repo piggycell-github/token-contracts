@@ -8,7 +8,7 @@ export default {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200,
+        runs: 1,  // 배포 비용 최소화
       },
     },
   },
@@ -25,34 +25,22 @@ export default {
       confirmations: 1, // Wait for only 1 block for fast confirmation
     },
     bsc_mainnet: {
-      url: "https://bsc-dataseed1.bnbchain.org",
+      url: process.env.BSC_MAINNET_RPC_URL || "https://bsc-dataseed1.bnbchain.org",
       chainId: 56,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      gasPrice: 5000000000, // 5 gwei
+      gasPrice: 1000000000, // 1 gwei
       timeout: 60000, // 60 second timeout
       confirmations: 2, // Mainnet recommends 2 block confirmations
     },
+    sepolia: {
+      url: "https://ethereum-sepolia-rpc.publicnode.com",
+      chainId: 11155111,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      timeout: 60000,
+    },
   },
   etherscan: {
-    apiKey: process.env.BSC_API_KEY || "",
-    customChains: [
-      {
-        network: "bsc_testnet",
-        chainId: 97,
-        urls: {
-          apiURL: "https://api-testnet.bscscan.com/api",
-          browserURL: "https://testnet.bscscan.com",
-        },
-      },
-      {
-        network: "bsc_mainnet",
-        chainId: 56,
-        urls: {
-          apiURL: "https://api.bscscan.com/api",
-          browserURL: "https://bscscan.com",
-        },
-      },
-    ],
+    apiKey: process.env.ETHERSCAN_API_KEY || "",
   },
   sourcify: {
     enabled: false,
